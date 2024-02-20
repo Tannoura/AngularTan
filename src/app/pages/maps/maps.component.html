@@ -1,0 +1,197 @@
+<!-- maps.component.html -->
+<div *ngIf="isUserPopupVisible" class="user-popup">
+  <div class="user-popup-content">
+    <span class="close" (click)="closeUserPopup()">&times;</span>
+    <h2>Utilisateurs liés à la session</h2>
+    <table class="table">
+      <thead>
+        
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Username</th>
+          <!-- Ajoutez d'autres colonnes selon les propriétés de User -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of selectedSessionUsers">
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
+          <td>{{ user.username }}</td>
+          <!-- Ajoutez d'autres colonnes selon les propriétés de User -->
+        </tr>
+        
+      </tbody>
+    </table>
+
+
+    <!--<button class="btn btn-primary" (click)="openPresenceManagementPopup(session.id)">Gérer présence</button>-->
+    <button class="close-button" (click)="closeUserPopup()">Fermer</button>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="session-list">
+  <h2>Liste des Sessions</h2>
+
+  <!-- Filtre de recherche -->
+  <input type="text" [(ngModel)]="searchValue" placeholder="Rechercher..." class="search-input">
+
+  <br><br>
+  <button class="btn btn-base custom-btn" (click)="openPopupForCreate()">Nouvelle Session</button>
+
+  <!-- Tableau des sessions -->
+  <table class="session-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Capacité</th>
+        <th>DateDebut</th>
+        <th>DateFin</th>
+        <th>Horaire</th>
+        <th>Lieu</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let session of sessions ">
+        <td>{{ session.id }}</td>
+        <td>{{ session.capacite }}</td>
+        <td>{{ session.datedebut | date: 'short' }}</td>
+        <td>{{ session.datefin | date: 'short' }}</td>
+        <td>{{session.horaire}}</td>
+        <td>{{ session.lieu }}</td>
+        <!-- Ajoutez d'autres colonnes selon les propriétés de Session -->
+        <td>
+          <button (click)="deleteSession(session.id)" class="btn btn-danger">Supprimer</button>
+          <button (click)="openPopupForUpdate(session)" class="btn btn-primary">Modifier</button>
+          <button (click)="showUsersForSession(session.id)" class="btn btn-info">DetailsSession</button>
+          <button class="btn btn-success" (click)="openPresenceManagementPopup(session.id)">Gérer présence</button>
+        </td>
+       
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+ <!-- Button to trigger the popup -->
+ <div class="modal" tabindex="-1" role="dialog" *ngIf="showModal" style="display: block;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <button *ngIf="!isUpdate"  type="button" class="btn-close text-white" aria-label="Close" (click)="closePopupForUpdate()"></button>
+        <button *ngIf="isUpdate"  type="button" class="btn-close text-white" aria-label="Close" (click)="closePopupForCreate()"></button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <!-- Form inside the popup -->
+        <h2 *ngIf="!isUpdate" class="text-center mb-4">Ajouter votre Session</h2>
+        <h2 *ngIf="isUpdate" class="text-center mb-4">Modifer votre Session</h2>
+
+        <form (ngSubmit)="onSubmit()" #sessionForm="ngForm" class="p-4 border rounded">
+          
+          <div class="form-group">
+            <label for="Capacite">Capacite :</label>
+            <input type="text" class="form-control" id="Capacite" name="Capacite" [(ngModel)]="session.capacite" required>
+          </div>
+
+         <div class="form-group">
+           <label for="datedebut">DateDebut :</label>
+            <input type="date" class="form-control" id="datedebut" name="datedebut" [(ngModel)]="session.datedebut" required>
+         </div>
+
+
+         <div class="form-group">
+          <label for="datefin">DateFin :</label>
+           <input type="date" class="form-control" id="datefin" name="datefin" [(ngModel)]="session.datefin" required>
+        </div>
+          
+        <div class="form-group">
+          <label for="horaire">Horaire :</label>
+          <textarea class="form-control" id="horaire" name="horaire" [(ngModel)]="session.horaire"></textarea>
+        </div>
+
+          <div class="form-group">
+            <label for="lieu">Lieu :</label>
+            <textarea class="form-control" id="lieu" name="lieu" [(ngModel)]="session.lieu"></textarea>
+          </div>
+
+          
+          
+          <div class="form-group">
+            <label for="formations">Formations :</label>
+            <div *ngFor="let formation of formations">
+              <div class="form-check">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="{{ 'formation-' + formation.id }}"
+                  name="selectedFormations"
+                  [(ngModel)]="selectedFormation"
+                  [value]="formation.id"
+                />
+                <label class="form-check-label" for="{{ 'formation-' + formation.id }}">
+                  {{ formation.titre }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="text-center">
+            <button *ngIf="!isUpdate" type="submit" class="btn btn-primary" [disabled]="!sessionForm.valid">Ajouter</button>
+            <button *ngIf="isUpdate" type="submit" class="btn btn-info" [disabled]="!sessionForm.valid">Modifier</button>
+          </div>
+
+
+        </form>
+
+
+      </div>
+      
+      <div class="modal-footer">
+        <button *ngIf="!isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForCreate()">Close</button>
+        <button *ngIf="isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForUpdate()">Close</button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+  <!-- Popup de gestion de présence -->
+  <div *ngIf="isPresenceManagementPopupVisible" class="popup-container presence-management-popup">
+    <div class="presence-management-popup-content">
+      <span class="close" (click)="closePresenceManagementPopup()">&times;</span>
+      <h2>Gestion de la présence</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Présence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of selectedSessionUsers">
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastname }}</td>
+            <td>
+              <button class="btn btn-success" (click)="markPresence(user.id, true, selectedSessionId)">Présent</button>
+<button class="btn btn-danger" (click)="markPresence(user.id, false, selectedSessionId)">Absent</button>
+
+              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="close-button" (click)="closePresenceManagementPopup()">Fermer</button>
+    </div>
+  </div>
+

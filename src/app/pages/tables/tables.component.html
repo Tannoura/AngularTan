@@ -1,0 +1,188 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    
+      
+        
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  
+  
+  <!-- Dark table -->
+  <div class="row mt-5">
+    <div class="col">
+      <div class="card bg-default shadow">
+        <div class="card-header bg-transparent border-0">
+          <h3 class="text-white mb-0">Organismes</h3>
+        </div>
+        <div class="table-responsive">
+          <br><br>
+          
+          <button class="btn btn-base custom-btn" (click)="openPopupForCreate()">Nouveau Organisme</button>
+          <br><br>
+        <div class="table-responsive">
+          <table class="table align-items-center table-dark table-flush">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NOM</th>
+                <th scope="col">ADRESSE</th>
+                <th scope="col">TELEPHONE</th>
+                <th scope="col">DESCRIPTION</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">ACTIONS</th>
+                <th scope="col">MODIFIER FORMATION</th>
+
+
+              </tr>
+            </thead>
+            <tbody>
+             
+              
+                <tr *ngFor="let organisme of organismes; let i=index;" [ngClass]="{'odd': i % 2 == 0, 'even': i % 2 != 0}">
+                  <td>{{ organisme.id }}</td>
+                  <td>{{ organisme.nom }}</td>
+                  <td>{{ organisme.adresse }}</td>
+                  <td>{{ organisme.telephone }}</td>
+                  <td>{{ organisme.description }}</td>
+                  <td>{{ organisme.email }}</td>
+                
+                  <td>
+                    <button (click)="deleteOrganisme(organisme.id)" class="btn btn-danger">Supprimer</button>
+                    <button (click)="openPopupForUpdate(organisme)" class="btn btn-info">Modifier</button>
+                  </td>
+                  <!-- Nouvelle colonne pour le bouton "Modifier Formation" -->
+<td>
+  <button (click)="openUpdateFormationModal(organisme)" class="btn btn-warning">Modifier Formation</button>
+</td>
+                </tr>
+              
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Button to trigger the popup -->
+ <div class="modal" tabindex="-1" role="dialog" *ngIf="showModal" style="display: block;">
+  
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+
+        <button *ngIf="!isUpdate"  type="button" class="btn-close text-white" aria-label="Close" (click)="closePopupForUpdate()"></button>
+        <button *ngIf="isUpdate"  type="button" class="btn-close text-white" aria-label="Close" (click)="closePopupForCreate()"></button>
+
+        
+      </div>
+      <div class="modal-body custom-modal-body">
+        <!-- Form inside the popup -->
+
+
+
+
+
+        <h2 *ngIf="!isUpdate" class="text-center mb-4">Ajouter votre Organisme</h2>
+        <h2 *ngIf="isUpdate" class="text-center mb-4">Modifer votre Organisme</h2>
+
+        <form (ngSubmit)="onSubmit()" #organismeForm="ngForm" class="p-4 border rounded">
+          <div class="form-group">
+            <label for="nom">Nom :</label>
+            <input type="text" class="form-control" id="nom" name="nom" [(ngModel)]="organisme.nom" required>
+          </div>
+          
+
+
+          <div class="form-group">
+            <label for="adresse">Adresse :</label>
+            <input type="text" class="form-control" id="adresse" name="adresse" [(ngModel)]="organisme.adresse" required>
+          </div>
+          <div class="form-group">
+            <label for="telephone">Telephone :</label>
+            <textarea class="form-control" id="telephone" name="telephone" [(ngModel)]="organisme.telephone"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description :</label>
+            <textarea class="form-control" id="description" name="description" [(ngModel)]="organisme.description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email :</label>
+            <textarea class="form-control" id="email" name="email" [(ngModel)]="organisme.email"></textarea>
+          </div>
+         
+
+          <div class="form-group">
+            <label for="formations">Formations :</label>
+            <div *ngFor="let formation of formations">
+              <div class="form-check">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  id="{{ 'formation-' + formation.id }}"
+                  name="selectedFormations"
+                  [(ngModel)]="selectedFormations"
+                  [value]="formation.id"
+                />
+                <label class="form-check-label" for="{{ 'formation-' + formation.id }}">
+                  {{ formation.titre }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <button *ngIf="!isUpdate" type="submit" class="btn btn-primary" [disabled]="!organismeForm.valid">Ajouter</button>
+            <button *ngIf="isUpdate" type="submit" class="btn btn-info" [disabled]="!organismeForm.valid">Modifier</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <!-- ... Your existing code ... -->
+
+<!-- Pop-up for updating formation -->
+<div class="modal" tabindex="-1" role="dialog" *ngIf="showUpdateFormationModal" style="display: block;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-white">
+        <button type="button" class="btn-close text-white" aria-label="Close" (click)="closeUpdateFormationModal()"></button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <!-- Form inside the popup for updating formation -->
+        <h2 class="text-center mb-4">Modifier la Formation</h2>
+        <form (ngSubmit)="updateFormation()" #updateFormationForm="ngForm" class="p-4 border rounded">
+          <div class="form-group">
+            <label for="titre">DureeEnHeures :</label>
+            <input type="dureeEnHeures" class="form-control" id="dureeEnHeures" name="dureeEnHeures" [(ngModel)]="selectedFormationForUpdate.dureeEnHeures" required>
+          </div>
+
+          <div class="form-group">
+            <label for="prix">Prix :</label>
+            <input type="text" class="form-control" id="prix" name="prix" [(ngModel)]="selectedFormationForUpdate.prix" required>
+          </div>
+          <!-- Other formation fields with null checks -->
+          <!-- ... Autres champs de formation avec des vérifications de nullité ... -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-warning">Modifier la Formation</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ... Your existing code ... -->
+
+
+
+  

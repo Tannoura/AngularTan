@@ -1,0 +1,143 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+    
+      <!-- Card stats -->
+      <div class="row">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Page content -->
+
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <br><br><br>
+  <div *ngIf="notification" class="notification">
+    {{notification}}
+    
+  </div>
+  
+  <!-- Dark table -->
+  <div class="row mt-5">
+    <div class="col">
+      <div class="card bg-default shadow">
+        <div class="card-header bg-transparent border-0">
+          <h3 class="text-white mb-0">Liste de Formation </h3>
+          
+        </div>
+        <div class="table-responsive">
+          <br><br>
+          
+          <button class="btn btn-base custom-btn" (click)="openPopupForCreate()">Nouvelle Formation</button>
+          <br><br>
+
+         
+            
+          
+          <table class="table align-items-center table-dark table-flush">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Description</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let formation of formations; let i=index;" [ngClass]="{'odd': i % 2 == 0, 'even': i % 2 != 0}">
+                <td>{{ formation.id }}</td>
+                <td>{{ formation.titre }}</td>
+                <td>{{ formation.description }}</td>
+                
+             
+        
+
+
+
+
+                <td>
+                  <button (click)="deleteFormation(formation.id)" class="btn btn-danger">Supprimer</button>
+                  <button (click)="openPopupForUpdate(formation)" class="btn btn-info">Modifier</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Button to trigger the popup -->
+ <div class="modal" tabindex="-1" role="dialog" *ngIf="showModal" style="display: block;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+
+        <button *ngIf="!isUpdate"  type="button" class="btn-close text-white" aria-label="Close" (click)="closePopupForUpdate()"></button>
+        <button *ngIf="isUpdate"  type="button" class="btn-close text-white" aria-label="Close" (click)="closePopupForCreate()"></button>
+
+        
+      </div>
+      <div class="modal-body custom-modal-body">
+        <!-- Form inside the popup -->
+
+
+
+
+
+        <h2 *ngIf="!isUpdate" class="text-center mb-4">Ajouter votre Formation</h2>
+        <h2 *ngIf="isUpdate" class="text-center mb-4">Modifer votre Formation</h2>
+
+        <form (ngSubmit)="onSubmit()" #formationForm="ngForm" class="p-4 border rounded">
+          <div class="form-group">
+            <label for="titre">Titre :</label>
+            <input type="text" class="form-control" id="titre" name="titre" [(ngModel)]="formation.titre" required>
+          </div>
+          
+          
+          
+          
+          
+          
+
+
+          <div class="form-group">
+            <label for="Description">Description :</label>
+            <input type="text" class="form-control" id="Description" name="Description" [(ngModel)]="formation.description" required>
+          </div>
+          
+         
+
+          
+
+          <div class="text-center">
+            <button *ngIf="!isUpdate" type="submit" class="btn btn-primary" [disabled]="!formationForm.valid">Ajouter</button>
+            <button *ngIf="isUpdate" type="submit" class="btn btn-info" [disabled]="!formationForm.valid">Modifier</button>
+          </div>
+
+
+        </form>
+
+
+
+
+
+      </div>
+      <div id="notification"></div>
+      <div class="modal-footer">
+        <button *ngIf="!isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForCreate()">Close</button>
+        <button *ngIf="isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForUpdate()">Close</button>
+
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+
+
