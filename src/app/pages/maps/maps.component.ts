@@ -11,6 +11,7 @@ import { OrganismeService } from 'src/app/Services/organisme.service';
 import { User } from 'src/app/Models/User';
 import { HttpClient } from '@angular/common/http';
 import { PresenceService } from 'src/app/Services/presence.service';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-maps',
@@ -24,7 +25,7 @@ export class MapsComponent implements OnInit {
   isUpdate:boolean=false;
   notification!: string ; // Ajout de la variable pour stocker la notification
   searchValue: string = ''; // Add this line recherche
-  constructor( private http: HttpClient,private presenceService : PresenceService,private sessionService: SessionsService,private formationService:FormationService,private organismeService:OrganismeService,private router: Router) { }
+  constructor( private http: HttpClient,private authService:AuthService,private presenceService : PresenceService,private sessionService: SessionsService,private formationService:FormationService,private organismeService:OrganismeService,private router: Router) { }
   showModal = false;
   selectedSessionUsers: User[] = [];
   isUserPopupVisible: boolean = false;
@@ -61,6 +62,12 @@ loadFormationsAndOrganismes(): void {
     }
   );
 
+console.log(this.authService.UserRole)
+   // Vérifiez si l'utilisateur a le rôle ADMIN
+   if (!this.authService.isAdmin()) {
+    // Redirigez l'utilisateur vers une autre page s'il n'a pas le rôle ADMIN
+    this.router.navigate(['/user-profile']); // Remplacez '/autre-page' par le chemin de la page de redirection
+  }
  
 }
 
@@ -112,7 +119,7 @@ openAddSessionModal() {
 
 
 
-onSubmit() {
+onSubmit() { 
   // Vérifiez si la formation est associée à un organisme
   this.formationService.getOrganismeByFormationId(this.selectedFormation)
     .subscribe(organismes => {
@@ -180,21 +187,7 @@ closeUserPopup(): void {
   this.isUserPopupVisible = false;
 }
 
-/*
-openPresenceManagementPopup(sessionId: number): void {
-  // Mettre à jour l'ID de la session sélectionnée
-  // Appelez la fonction du service pour récupérer les utilisateurs liés à la session
-  this.sessionService.getUsersBySession(sessionId).subscribe(
-    (users: User[]) => {
-      console.log('Utilisateurs liés à la session : ', users);
-      this.selectedSessionUsers = users;
-      this.isPresenceManagementPopupVisible = true; // Afficher la nouvelle popup
-    },
-    (error) => {
-      console.error('Erreur lors de la récupération des utilisateurs liés à la session : ', error);
-    }
-  );
-}*/
+
 closePresenceManagementPopup(): void {
   this.isPresenceManagementPopupVisible = false; // Masquer la nouvelle popup
 }
@@ -227,6 +220,8 @@ openPresenceManagementPopup(sessionId: number): void {
     }
   );
 }
+  
+
 
 }
   
