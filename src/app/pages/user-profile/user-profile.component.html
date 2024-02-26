@@ -39,7 +39,10 @@
 
 
         <button class="delete-button" (click)="affecterUsersToSession([(username)],session.id)">Participer</button>
-          
+
+<!-- Bouton "Ajouter" pour ouvrir la pop-up du quiz -->
+<button class="btn btn-primary"  *ngIf="isSessionEnded(session.datefin)" (click)="openQuizPopup()">Ajouter un quiz</button>
+
         </td>
        
       </tr>
@@ -54,16 +57,11 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-
-        
+ 
         
       </div>
       <div class="modal-body custom-modal-body">
         <!-- Form inside the popup -->
-
-
-
-
 
         <h2 *ngIf="!isUpdate" class="text-center mb-4">Ajouter votre Session</h2>
         <h2 *ngIf="isUpdate" class="text-center mb-4">Modifer votre Session</h2>
@@ -97,7 +95,6 @@
           </div>
 
           
-          
           <div class="form-group">
             <label for="formations">Formations :</label>
             <div *ngFor="let formation of formations">
@@ -116,27 +113,49 @@
               </div>
             </div>
           </div>
-
-
           <div class="text-center">
             <button *ngIf="!isUpdate" type="submit" class="btn btn-primary" [disabled]="!sessionForm.valid">Ajouter</button>
             <button *ngIf="isUpdate" type="submit" class="btn btn-info" [disabled]="!sessionForm.valid">Modifier</button>
           </div>
-
-
         </form>
-
-
       </div>
       
       <div class="modal-footer">
         <button *ngIf="!isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForCreate()">Close</button>
         <button *ngIf="isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForUpdate()">Close</button>
-
       </div>
     </div>
   </div>
+  </div>
 
+   <!-- Pop-up du quiz -->
+ <div class="modal" tabindex="-1" role="dialog" *ngIf="showQuizPopup" style="display: block;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Ajouter un quiz</h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeQuizPopup()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <!-- Formulaire pour le quiz -->
+        <form (ngSubmit)="onSubmitQuiz()" #quizForm="ngForm">
+          <div class="form-group">
+            <label for="avis">Avis :</label>
+            <input type="text" class="form-control" id="avis" name="avis" [(ngModel)]="newQuiz.avis" required>
+          </div>
 
-  
+          <!-- Autres champs du formulaire pour le quiz -->
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Soumettre</button>
+          </div>
+          <button type="button" class="close" aria-label="Close" (click)="closeQuizPopup()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

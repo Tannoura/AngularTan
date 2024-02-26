@@ -19,7 +19,7 @@
         <div class="table-responsive">
           <br><br>
           
-          <button class="btn btn-base custom-btn" (click)="openPopupForCreate()">Nouveau Organisme</button>
+          <button class="btn btn-base custom-btn" (click)="openPopupForCreate()" *ngIf="auth.isAdmin()">Nouveau Organisme</button>
           <br><br>
         <div class="table-responsive">
           <table class="table align-items-center table-dark table-flush">
@@ -31,8 +31,8 @@
                 <th scope="col">TELEPHONE</th>
                 <th scope="col">DESCRIPTION</th>
                 <th scope="col">EMAIL</th>
-                <th scope="col">ACTIONS</th>
-                <th scope="col">MODIFIER FORMATION</th>
+                <th scope="col" *ngIf="auth.isAdmin()">ACTIONS</th>
+                <th  scope="col" *ngIf="auth.isAdmin()">MODIFIER FORMATION</th>
 
 
               </tr>
@@ -48,13 +48,13 @@
                   <td>{{ organisme.description }}</td>
                   <td>{{ organisme.email }}</td>
                 
-                  <td>
-                    <button (click)="deleteOrganisme(organisme.id)" class="btn btn-danger">Supprimer</button>
+                  <td *ngIf="auth.isAdmin()">
+                    <button (click)="deleteOrganisme(organisme.id)" class="btn btn-danger" >Supprimer</button>
                     <button (click)="openPopupForUpdate(organisme)" class="btn btn-info">Modifier</button>
                   </td>
                   <!-- Nouvelle colonne pour le bouton "Modifier Formation" -->
 <td>
-  <button (click)="openUpdateFormationModal(organisme)" class="btn btn-warning">Modifier Formation</button>
+  <button (click)="openUpdateFormationModal(organisme)"*ngIf="auth.isAdmin()" class="btn btn-warning">Modifier Formation</button>
 </td>
                 </tr>
               

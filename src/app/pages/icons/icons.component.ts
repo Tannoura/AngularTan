@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Formateur } from 'src/app/Models/Formateur';
 import { Formation } from 'src/app/Models/Formation';
+import { AuthService } from 'src/app/Services/auth.service';
 import { formateurService } from 'src/app/Services/formateur.service';
 
 import { FormationService } from 'src/app/Services/formation.service';
@@ -20,8 +21,8 @@ export class IconsComponent implements OnInit {
   isUpdate:boolean=false;
   notification!: string ; // Ajout de la variable pour stocker la notification
   searchValue: string = ''; // Add this line recherche
-
-  constructor(private formationservice: FormationService,private router: Router) { }
+auth = this.authService;
+  constructor(private authService: AuthService , private formationservice: FormationService,private router: Router) { }
   showModal = false;
  
   
@@ -77,8 +78,6 @@ public deleteFormation(id: number) {
 
 
 onSubmit() {
- 
-
     this.formationservice.addFormation(this.formation).subscribe(
       (formation) => {
         console.log('Facture ajouté avec succès: ', this.formation);

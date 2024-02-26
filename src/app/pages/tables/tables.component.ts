@@ -4,6 +4,7 @@ import { Formation } from 'src/app/Models/Formation';
 import { Organisme } from 'src/app/Models/Organisme';
 import { OrganismeService } from 'src/app/Services/organisme.service';
 import { FormationService } from 'src/app/Services/formation.service';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-tables',
@@ -27,8 +28,10 @@ export class TablesComponent implements OnInit {
   showUpdateFormationModal = false;
 
   showUpdateAfterAdd: boolean = false;
+  auth = this.authService;
 
   constructor(
+    private authService: AuthService,
     private formationservice:FormationService,
     private organismeservice: OrganismeService,
     private formationService: FormationService, // Ajout du service FormationService

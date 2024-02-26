@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Formation } from 'src/app/Models/Formation';
 import { Organisme } from 'src/app/Models/Organisme';
+import { Quiz } from 'src/app/Models/Quiz';
 import { Session } from 'src/app/Models/Session';
 import { AuthService } from 'src/app/Services/auth.service';
 import { FormationService } from 'src/app/Services/formation.service';
 import { OrganismeService } from 'src/app/Services/organisme.service';
+import { QuizService } from 'src/app/Services/quiz.service';
 import { SessionsService } from 'src/app/Services/session.service';
 
 @Component({
@@ -20,8 +22,8 @@ export class UserProfileComponent implements OnInit {
   notification!: string ; // Ajout de la variable pour stocker la notification
   searchValue: string = ''; // Add this line recherche
   userId: number;
-
-  constructor(private authService:AuthService,private sessionService: SessionsService,private formationService:FormationService,private organismeService:OrganismeService,private router: Router) { }
+  quiz:Quiz = new Quiz();
+  constructor(private quizservice:QuizService,private authService:AuthService,private sessionService: SessionsService,private formationService:FormationService,private organismeService:OrganismeService,private router: Router) { }
   showModal = false;
 
   
@@ -33,6 +35,8 @@ export class UserProfileComponent implements OnInit {
   formations: Formation[];
   organismes: Organisme[];
  
+  showQuizPopup: boolean = false;
+  newQuiz: Quiz = new Quiz();
 
 
 
@@ -57,8 +61,20 @@ loadFormationsAndOrganismes(): void {
       this.formations = data;
     }
   );
+}
 
- 
+// Méthode pour ouvrir la pop-up du quiz
+openQuizPopup() {
+  // Réinitialisez les données du formulaire du quiz
+  this.newQuiz = new Quiz();
+  // Affichez la pop-up du quiz
+  this.showQuizPopup = true;
+}
+
+// Méthode pour fermer la pop-up du quiz
+closeQuizPopup() {
+  // Masquez la pop-up du quiz
+  this.showQuizPopup = false;
 }
 
 
@@ -189,5 +205,33 @@ console.log(username)
 
 
 
+// Méthode pour soumettre le formulaire du quiz
+onSubmitQuiz() {
+  // Appelez le service pour ajouter le quiz
+  this.quizservice.addQuiz(this.newQuiz).subscribe(
+    (quiz) => {
+      console.log('Quiz ajouté avec succès: ', this.newQuiz);
+      // Réinitialisez les données du formulaire du quiz après l'ajout
+      this.newQuiz = new Quiz();
+      // Fermez la pop-up du quiz
+      this.showQuizPopup = false;
+      // Affichez une notification de succès ou effectuez d'autres actions nécessaires
+      this.notification = 'Un nouveau quiz a été ajouté avec succès';
+    },
+    (error) => {
+      console.error('Erreur lors de l\'ajout du quiz : ', error);
+      if (error.status === 500) {
+        alert('Veuillez vérifier que tous les champs sont remplis correctement');
+      }
+    }
+  );
+}
+
+
+// Fonction pour vérifier si la session est terminée
+isSessionEnded(dateFin: Date): boolean {
+  const currentDate = new Date();
+  return currentDate.getTime() > new Date(dateFin).getTime();
+}
 
 }

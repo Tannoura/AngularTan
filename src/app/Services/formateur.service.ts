@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Formateur } from '../Models/Formateur';
 import { Response } from '../Models/Response';
-import { Question } from '../Models/Question';
 
 
 
@@ -50,23 +49,9 @@ addReponse(response: Response): Observable<Response> {
 
 
 
-addQuestion(question: Question): Observable<Question> {
-  const headers = new HttpHeaders({
-  });
-  console.log('Question à envoyer:', question);  // Ajoutez cette ligne
-  return this.http.post<Question>(this.quesUrl, question, { headers: headers });
-}
+
  
 
 
-getAllResponses(): Observable<Response[]> {
-    
-  return this.http.get<Response[]>(this.resUrl);
-}
-  
-getAllQuestions(): Observable<Question[]> {
-    
-  return this.http.get<Question[]>(this.affQues/*, { headers: headers }*/);
-}
 
 }

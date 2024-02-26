@@ -62,7 +62,6 @@ loadFormationsAndOrganismes(): void {
     }
   );
 
-console.log(this.authService.UserRole)
    // Vérifiez si l'utilisateur a le rôle ADMIN
    if (!this.authService.isAdmin()) {
     // Redirigez l'utilisateur vers une autre page s'il n'a pas le rôle ADMIN

@@ -9,7 +9,6 @@ import { Formateur } from 'src/app/Models/Formateur';
 import { formateurService } from 'src/app/Services/formateur.service';
 import { Router } from '@angular/router';
 import { Response } from 'src/app/Models/Response';
-import { Question } from 'src/app/Models/Question';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +20,6 @@ export class DashboardComponent implements OnInit {
 
   formateurs!: Formateur[]
   formateur: Formateur = new Formateur();
-  question: Question = new Question();
   showModalQuestion: boolean = false;
   selectedResponseId: number;
 
@@ -42,12 +40,6 @@ export class DashboardComponent implements OnInit {
       }
     );
   
-// Récupérez la liste des réponses depuis le service
-this.formateurservice.getAllResponses().subscribe(
-  (data: Response[]) => {
-    this.responses = data;
-  }
-);
 
 
     this.closePopupForUpdate()
@@ -164,37 +156,10 @@ onSubmitResponse() {
 
 
 
-onSubmitQuestion() {
-  // Assurez-vous que this.selectedResponseId est l'ID de la réponse sélectionnée
-  this.question.correctAnswer = {
-    id: this.selectedResponseId,
-    response: '',  // Assurez-vous de fournir une valeur appropriée pour 'response'
-};
-  console.log('Question à envoyer depuis le composant:', this.question); 
-
-  this.formateurservice.addQuestion(this.question)
-  .subscribe(
-    question => {
-      console.log('Question ajoutée avec succès:', question);
-      // ...
-    },
-    error => {
-      console.error('Erreur lors de l\'ajout de la question : ', error);
-      console.log('Contenu de la réponse d\'erreur : ', error.error);
-      if (error.status === 500) {
-        alert("Veuillez vérifier que tous les champs sont vrais");
-      }
-    }  
-  );
-
-  this.showModal = false;
-}
 
 
-openPopupForCreateQuestion() {
-  this.question = new Question(); // Réinitialiser la question
-  this.showModalQuestion = true; // Afficher la popup
-}
+
+
 
 closePopupForCreateQuestion() {
   this.showModalQuestion = false; // Masquer la popup
