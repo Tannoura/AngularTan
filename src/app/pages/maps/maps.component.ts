@@ -36,7 +36,7 @@ export class MapsComponent implements OnInit {
 
  // Déclarez une propriété pour stocker les utilisateurs absents
  absentUsers: User[] = [];
-  
+
   isPresenceManagementPopupVisible: boolean = false;
 
   showAffecterPopup = false;
@@ -44,7 +44,7 @@ export class MapsComponent implements OnInit {
 
   formations: Formation[];
   organismes: Organisme[];
- 
+
 
 
 
@@ -54,7 +54,7 @@ export class MapsComponent implements OnInit {
         this.sessions = data;
       }
     );
-  
+
     this.loadFormationsAndOrganismes();
     this.closePopupForUpdate()
     this.closePopupForCreate()
@@ -72,7 +72,7 @@ loadFormationsAndOrganismes(): void {
     // Redirigez l'utilisateur vers une autre page s'il n'a pas le rôle ADMIN
     this.router.navigate(['/user-profile']); // Remplacez '/autre-page' par le chemin de la page de redirection
   }
- 
+
 }
 
 showQuizzesForSession(sessionId: number): void {
@@ -99,7 +99,7 @@ openPopupForCreate() {
 
 openPopupForUpdate(sessiontoupdate:any) {
   this.session=sessiontoupdate
-  
+
   this.showModal = true;
   this.isUpdate=true;
 
@@ -118,8 +118,8 @@ getAllSession(): void {
   this.sessionService.getSessions()
     .subscribe(sessions => this.sessions = sessions);
 // location.reload(); //reload the page
- 
-  
+
+
 }
 
 public deleteSession(id: number) {
@@ -139,7 +139,7 @@ openAddSessionModal() {
 
 
 
-onSubmit() { 
+onSubmit() {
   // Vérifiez si la formation est associée à un organisme
   this.formationService.getOrganismeByFormationId(this.selectedFormation)
     .subscribe(organismes => {
@@ -165,7 +165,7 @@ onSubmit() {
             if (error.status === 400) {
               // Gérer le cas où l'erreur est une erreur HTTP 404
               alert("'Verifier Date'");
-              
+
             }
             alert("Veuillez Vérifier les datesde la session");
 
@@ -258,8 +258,8 @@ openPresenceManagementPopup(sessionId: number): void {
     }
   );
 }
-  
+
 
 
 }
-  
+

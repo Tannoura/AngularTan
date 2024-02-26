@@ -82,7 +82,7 @@
           <button class="btn btn-success" (click)="openPresenceManagementPopup(session.id)">Gérer présence</button>
           <button (click)="showQuizzesForSession(session.id)" class="btn btn-warning">Voir les Quizs</button>
         </td>
-       
+
       </tr>
     </tbody>
   </table>
@@ -104,7 +104,7 @@
         <h2 *ngIf="isUpdate" class="text-center mb-4">Modifer votre Session</h2>
 
         <form (ngSubmit)="onSubmit()" #sessionForm="ngForm" class="p-4 border rounded">
-          
+
           <div class="form-group">
             <label for="Capacite">Capacite :</label>
             <input type="text" class="form-control" id="Capacite" name="Capacite" [(ngModel)]="session.capacite" required>
@@ -120,7 +120,7 @@
           <label for="datefin">DateFin :</label>
            <input type="date" class="form-control" id="datefin" name="datefin" [(ngModel)]="session.datefin" required>
         </div>
-          
+
         <div class="form-group">
           <label for="horaire">Horaire :</label>
           <textarea class="form-control" id="horaire" name="horaire" [(ngModel)]="session.horaire"></textarea>
@@ -131,8 +131,8 @@
             <textarea class="form-control" id="lieu" name="lieu" [(ngModel)]="session.lieu"></textarea>
           </div>
 
-          
-          
+
+
           <div class="form-group">
             <label for="formations">Formations :</label>
             <div *ngFor="let formation of formations">
@@ -163,7 +163,7 @@
 
 
       </div>
-      
+
       <div class="modal-footer">
         <button *ngIf="!isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForCreate()">Close</button>
         <button *ngIf="isUpdate" type="button" class="btn btn-secondary" (click)="closePopupForUpdate()">Close</button>
@@ -196,7 +196,7 @@
               <button class="btn btn-success" (click)="markPresence(user.id, true, selectedSessionId)">Présent</button>
 <button class="btn btn-danger" (click)="markPresence(user.id, false, selectedSessionId)">Absent</button>
 
-              
+
             </td>
           </tr>
         </tbody>
