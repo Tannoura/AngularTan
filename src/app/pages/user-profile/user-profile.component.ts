@@ -25,6 +25,7 @@ export class UserProfileComponent implements OnInit {
   quiz:Quiz = new Quiz();
   constructor(private quizservice:QuizService,private authService:AuthService,private sessionService: SessionsService,private formationService:FormationService,private organismeService:OrganismeService,private router: Router) { }
   showModal = false;
+  selectedSessionId: number; // Ajoutez cette variable pour stocker l'ID de la session sélectionnée
 
   
   // Nouvelles propriétés pour la gestion de l'affectation
@@ -64,7 +65,9 @@ loadFormationsAndOrganismes(): void {
 }
 
 // Méthode pour ouvrir la pop-up du quiz
-openQuizPopup() {
+openQuizPopup(sessionId: number) {
+  this.selectedSessionId = sessionId;
+
   // Réinitialisez les données du formulaire du quiz
   this.newQuiz = new Quiz();
   // Affichez la pop-up du quiz
@@ -127,6 +130,7 @@ openAddSessionModal() {
 
 
 onSubmit() {
+  
   // Vérifiez si la formation est associée à un organisme
   this.formationService.getOrganismeByFormationId(this.selectedFormation)
     .subscribe(organismes => {
@@ -149,7 +153,9 @@ onSubmit() {
             // Rafraîchissez la liste des sessions ou effectuez d'autres actions nécessaires
             this.getAllSession();
           }, error => {
-            console.error('Erreur lors de la création de la session : ', error);
+
+           
+              
             if (error.status === 500) {
               alert("Une erreur s'est produite lors de la création de la session.");
             }
@@ -205,14 +211,20 @@ console.log(username)
 
 
 
-// Méthode pour soumettre le formulaire du quiz
 onSubmitQuiz() {
+  // Récupérer l'ID de la session à partir de la session sélectionnée
+
+  //celui qui a envoyé le Quiz
+  this.newQuiz.expediteur=this.authService.username;
+
   // Appelez le service pour ajouter le quiz
-  this.quizservice.addQuiz(this.newQuiz).subscribe(
+  this.quizservice.addQuiz(this.newQuiz,this.selectedSessionId).subscribe(
     (quiz) => {
+
       console.log('Quiz ajouté avec succès: ', this.newQuiz);
       // Réinitialisez les données du formulaire du quiz après l'ajout
       this.newQuiz = new Quiz();
+
       // Fermez la pop-up du quiz
       this.showQuizPopup = false;
       // Affichez une notification de succès ou effectuez d'autres actions nécessaires

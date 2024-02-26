@@ -1,35 +1,44 @@
-<!-- maps.component.html -->
 <div *ngIf="isUserPopupVisible" class="user-popup">
   <div class="user-popup-content">
     <span class="close" (click)="closeUserPopup()">&times;</span>
-    <h2>Utilisateurs liés à la session</h2>
+    <h2>Liste de Présence de la session</h2>
+    <h3>Présents :</h3>
     <table class="table">
       <thead>
-        
         <tr>
           <th>Prénom</th>
           <th>Nom</th>
           <th>Username</th>
-          <!-- Ajoutez d'autres colonnes selon les propriétés de User -->
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of selectedSessionUsers">
+        <tr *ngFor="let user of presentUsers">
           <td>{{ user.firstname }}</td>
           <td>{{ user.lastname }}</td>
           <td>{{ user.username }}</td>
-          <!-- Ajoutez d'autres colonnes selon les propriétés de User -->
         </tr>
-        
       </tbody>
     </table>
-
-
-    <!--<button class="btn btn-primary" (click)="openPresenceManagementPopup(session.id)">Gérer présence</button>-->
+    <h3>Absents :</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Username</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of absentUsers">
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.lastname }}</td>
+          <td>{{ user.username }}</td>
+        </tr>
+      </tbody>
+    </table>
     <button class="close-button" (click)="closeUserPopup()">Fermer</button>
   </div>
 </div>
-
 
 
 
@@ -65,12 +74,13 @@
         <td>{{ session.datefin | date: 'short' }}</td>
         <td>{{session.horaire}}</td>
         <td>{{ session.lieu }}</td>
-        <!-- Ajoutez d'autres colonnes selon les propriétés de Session -->
+
         <td>
           <button (click)="deleteSession(session.id)" class="btn btn-danger">Supprimer</button>
           <button (click)="openPopupForUpdate(session)" class="btn btn-primary">Modifier</button>
-          <button (click)="showUsersForSession(session.id)" class="btn btn-info">DetailsSession</button>
+          <button (click)="showUsersForSession(session.id)" class="btn btn-info">Voir La liste</button>
           <button class="btn btn-success" (click)="openPresenceManagementPopup(session.id)">Gérer présence</button>
+          <button (click)="showQuizzesForSession(session.id)" class="btn btn-warning">Voir les Quizs</button>
         </td>
        
       </tr>
@@ -195,3 +205,27 @@
     </div>
   </div>
 
+  <!-- Popup affichant les quizs de la session -->
+<div *ngIf="isQuizzesPopupVisible" class="popup-container quizzes-popup">
+  <div class="quizzes-popup-content">
+    <span class="close" (click)="closeQuizzesPopup()">&times;</span>
+    <h2>Quizs associés à la session</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Avis</th>
+          <th>Expéditeur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quiz of selectedSessionQuizzes">
+          <td>{{ quiz.id }}</td>
+          <td>{{ quiz.avis }}</td>
+          <td>{{ quiz.expediteur }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="close-button" (click)="closeQuizzesPopup()">Fermer</button>
+  </div>
+</div>

@@ -11,8 +11,9 @@ export class QuizService {
 
   constructor(private http: HttpClient) { }
 
-  addQuiz(quiz: Quiz): Observable<Quiz> {
-    return this.http.post<Quiz>(this.apiUrl, quiz);
+  addQuiz(quiz: Quiz, sessionId: number): Observable<Quiz> {
+    // Ajoutez l'ID de la session dans le corps de la requête
+    return this.http.post<Quiz>(`${this.apiUrl}?sessionId=${sessionId}`, quiz);
   }
 
   deleteQuiz(id: number): Observable<void> {

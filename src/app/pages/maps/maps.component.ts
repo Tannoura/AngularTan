@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Session } from 'src/app/Models/Session';
-
 import { Router } from '@angular/router';
-
 import { SessionsService } from 'src/app/Services/session.service';
 import { Formation } from 'src/app/Models/Formation';
 import { Organisme } from 'src/app/Models/Organisme';
@@ -12,6 +10,8 @@ import { User } from 'src/app/Models/User';
 import { HttpClient } from '@angular/common/http';
 import { PresenceService } from 'src/app/Services/presence.service';
 import { AuthService } from 'src/app/Services/auth.service';
+import { Quiz } from 'src/app/Models/Quiz';
+import { Presence } from 'src/app/Models/Presence';
 
 @Component({
   selector: 'app-maps',
@@ -19,7 +19,8 @@ import { AuthService } from 'src/app/Services/auth.service';
   styleUrls: ['./maps.component.scss']
 })
 export class MapsComponent implements OnInit {
-
+  selectedSessionQuizzes: Quiz[] = [];
+  isQuizzesPopupVisible: boolean = false;
   sessions!: Session[]
   session: Session = new Session();
   isUpdate:boolean=false;
@@ -30,7 +31,11 @@ export class MapsComponent implements OnInit {
   selectedSessionUsers: User[] = [];
   isUserPopupVisible: boolean = false;
   selectedSessionId:number;
+ // Déclarez une propriété pour stocker les utilisateurs présents
+ presentUsers: User[] = [];
 
+ // Déclarez une propriété pour stocker les utilisateurs absents
+ absentUsers: User[] = [];
   
   isPresenceManagementPopupVisible: boolean = false;
 
@@ -70,6 +75,22 @@ loadFormationsAndOrganismes(): void {
  
 }
 
+showQuizzesForSession(sessionId: number): void {
+  this.sessionService.getQuizzesBySession(sessionId).subscribe(
+    (quizzes: Quiz[]) => {
+      console.log('Quizs associés à la session : ', quizzes);
+      this.selectedSessionQuizzes = quizzes;
+      this.isQuizzesPopupVisible = true;
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des quizs associés à la session : ', error);
+    }
+  );
+}
+
+closeQuizzesPopup(): void {
+  this.isQuizzesPopupVisible = false;
+}
 
 openPopupForCreate() {
   this.isUpdate=false
@@ -141,6 +162,13 @@ onSubmit() {
             // Rafraîchissez la liste des sessions ou effectuez d'autres actions nécessaires
             this.getAllSession();
           }, error => {
+            if (error.status === 400) {
+              // Gérer le cas où l'erreur est une erreur HTTP 404
+              alert("'Verifier Date'");
+              
+            }
+            alert("Veuillez Vérifier les datesde la session");
+
             console.error('Erreur lors de la création de la session : ', error);
             if (error.status === 500) {
               alert("Une erreur s'est produite lors de la création de la session.");
@@ -166,21 +194,32 @@ loadFormations(): void {
 }
 
 
+showUsersForSession(sessionId: number): void {
+  this.isUserPopupVisible = true;
 
- // Nouvelle méthode pour afficher les utilisateurs liés à une session
- showUsersForSession(sessionId: number): void {
-  // Appelez la fonction du service pour récupérer les utilisateurs liés à la session
-  this.sessionService.getUsersBySession(sessionId).subscribe(
-    (users: User[]) => {
-      console.log('Utilisateurs liés à la session : ', users);
-      this.selectedSessionUsers = users;
-      this.isUserPopupVisible = true;
-    },
-    (error) => {
-      console.error('Erreur lors de la récupération des utilisateurs liés à la session : ', error);
-    }
-  );
+ this.presenceService.getUsersPresenceBySessionId(sessionId).subscribe(
+  (presenceList: Presence[]) => {
+    // Réinitialisez les tableaux d'utilisateurs
+    this.presentUsers = [];
+    this.absentUsers = [];
+
+    // Parcourez la liste des présences et remplissez les tableaux d'utilisateurs présents et absents
+    presenceList.forEach(presence => {
+      if (presence.present) {
+        this.presentUsers.push(presence.user);
+      } else {
+        this.absentUsers.push(presence.user);
+      }
+    });
+  },
+  error => {
+    // Gérez l'erreur en conséquence
+    console.error('Erreur lors de la récupération des utilisateurs pour la session : ', error);
+  }
+);
 }
+
+
 
 closeUserPopup(): void {
   this.isUserPopupVisible = false;

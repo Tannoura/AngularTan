@@ -9,11 +9,16 @@ import { User } from '../Models/User';
   providedIn: 'root'
 })
 export class SessionsService {
+  
   private apiUrl = 'http://localhost:8083/hrmaps/api/sessions';
   private showUsers = 'http://localhost:8083/hrmaps/api/users';
-
+  private quizSessionUrl ='http://localhost:8083/hrmaps/quiz/sessions'; 
   constructor(private http: HttpClient) { }
 
+  getQuizzesBySession(sessionId: number): Observable<any> {
+    const url = `${this.quizSessionUrl}/${sessionId}/quizzes`; // Assuming your Spring backend provides an endpoint like this
+    return this.http.get<any>(url);
+  }
   getSessions(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
