@@ -71,6 +71,9 @@
           <button (click)="openPopupForUpdate(session)" class="btn btn-primary">Modifier</button>
           <button (click)="showUsersForSession(session.id)" class="btn btn-info">DetailsSession</button>
           <button class="btn btn-success" (click)="openPresenceManagementPopup(session.id)">Gérer présence</button>
+
+          <button (click)="showQuizzesForSession(session.id)" class="btn btn-warning">Voir les Quizs de la session</button>
+
         </td>
        
       </tr>
@@ -195,3 +198,29 @@
     </div>
   </div>
 
+  <!-- Popup affichant les quizs de la session -->
+<div *ngIf="isQuizzesPopupVisible" class="popup-container quizzes-popup">
+  <div class="quizzes-popup-content">
+    <span class="close" (click)="closeQuizzesPopup()">&times;</span>
+    <h2>Quizs associés à la session</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Avis</th>
+          <th>Expéditeur</th>
+          <!-- Ajoutez d'autres colonnes selon les propriétés de Quiz -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quiz of selectedSessionQuizzes">
+          <td>{{ quiz.id }}</td>
+          <td>{{ quiz.avis }}</td>
+          <td>{{ quiz.expediteur }}</td>
+          <!-- Ajoutez d'autres colonnes selon les propriétés de Quiz -->
+        </tr>
+      </tbody>
+    </table>
+    <button class="close-button" (click)="closeQuizzesPopup()">Fermer</button>
+  </div>
+</div>

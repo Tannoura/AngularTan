@@ -41,7 +41,7 @@
         <button class="delete-button" (click)="affecterUsersToSession([(username)],session.id)">Participer</button>
 
 <!-- Bouton "Ajouter" pour ouvrir la pop-up du quiz -->
-<button class="btn btn-primary"  *ngIf="isSessionEnded(session.datefin)" (click)="openQuizPopup()">Ajouter un quiz</button>
+<button class="btn btn-primary"  *ngIf="isSessionEnded(session.datefin)" (click)="openQuizPopup(session.id)">Ajouter un quiz</button>
 
         </td>
        
@@ -82,7 +82,10 @@
          <div class="form-group">
           <label for="datefin">DateFin :</label>
            <input type="date" class="form-control" id="datefin" name="datefin" [(ngModel)]="session.datefin" required>
+           
         </div>
+
+        
           
         <div class="form-group">
           <label for="horaire">Horaire :</label>
@@ -141,9 +144,13 @@
       <div class="modal-body custom-modal-body">
         <!-- Formulaire pour le quiz -->
         <form (ngSubmit)="onSubmitQuiz()" #quizForm="ngForm">
+
+          
           <div class="form-group">
             <label for="avis">Avis :</label>
             <input type="text" class="form-control" id="avis" name="avis" [(ngModel)]="newQuiz.avis" required>
+            <input type="hidden" name="sessionId" [(ngModel)]="selectedSessionId">
+
           </div>
 
           <!-- Autres champs du formulaire pour le quiz -->
